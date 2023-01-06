@@ -1,9 +1,7 @@
 <template>
   <div id="app">
 
-    <div class="elevator-list">
-      <elevator v-for="(elevator, index) of numberOfElevators" v-bind:key="index"></elevator>
-    </div>
+     <elevator-system></elevator-system>
 
   </div>
 </template>
@@ -11,47 +9,65 @@
 <script>
 
   import config from './config.js'
-  import Elevator from './components/Elevator/Elevator.vue'
+  import ElevatorSystem from './components/ElevatorSystem.vue'
 
   export default {
     name: 'App',
     components: {
-      "elevator": Elevator,
+      "elevator-system" : ElevatorSystem,
     },
     data() {
       return {
-        numberOfLevels: 5,
-        numberOfElevators: 1
+        useConfig: config,
       }
     },
     methods: {
 
-      changeSettings(){
-        this.numberOfLevels = config.numberOfLevels;
-        this.numberOfElevators = config.numberOfElevators;
+      init(){
+        this.creteLevels();
+        this.creteElevators();
       },
-
-    },
-    computed: {
-    
-
+      creteLevels(){
+        const data = {levels: [], mutationName : "setLevels"}
+        for(let i = 0; i < this.useConfig.numberOfLevels; i++){
+          data.levels.push({
+            "id": i + 1
+          })
+        }
+        this.$store.dispatch('setData',data);
+      },
+      creteElevators(){
+        const data = {elevators: [], mutationName : "setElevators"}
+        for(let i = 0; i < this.useConfig.numberOfElevators; i++){
+          data.elevators.push({
+            "id": i + 1,
+            "inMotion": false,
+            "locationLevel": 1,
+            "color": "#"+((1<<24)*Math.random()|0).toString(16),
+          })
+        }
+        this.$store.dispatch('setData',data);
+      }
     },
     created(){
-      this.changeSettings();
+      this.init();
     },
     mounted() {
- 
+      
     }
   }
 </script>
 
 <style>
 
-
   #app {
-    color: #074E5E;
+    white-space: nowrap;
+    overflow:scroll-x;
     font-family: 'Roboto', sans-serif;
-    min-width: 600px;
+    height: 100%;
+    margin: 0;
+    padding:0;
+    color: black;
   }
 
 
