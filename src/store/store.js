@@ -30,14 +30,28 @@ export const store = new Vuex.Store({
     setLevels(state,data) {
       state.levels = data.levels;
     },
+    callElevator(state,data) {
+      const temp = state.elevators.filter(el => el.inMotion === false).map(el => el.locationLevel);
+      console.log(temp);
+      const callLevelId = data.levelID;
+      const numberLevelOfNearestElevator = temp.sort((x, y) => Math.abs(callLevelId - x) - Math.abs(callLevelId - y))[0];
+      const changeElevator = state.elevators.find(elevator => elevator.locationLevel == numberLevelOfNearestElevator)
+      if(changeElevator){
+        const transitTime = Math.abs(callLevelId-changeElevator.locationLevel)
+        console.log(transitTime);
+        changeElevator.locationLevel = callLevelId;
+        changeElevator.inMotion = true;
+        setTimeout(() => {      
+          changeElevator.inMotion = false;
+        }, transitTime*1000); 
+      }
+    },
     
-
   },
   actions: {
     setData(context, data) {
       context.commit(data.mutationName, data)
     },
-
     
 
   }

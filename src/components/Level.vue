@@ -1,6 +1,6 @@
 <template>
     <div class="block-level">
-        <elevator v-for="elevator in elevators" :levelId="levelId" :elevatorId="elevator.id" v-bind:key="levelId.toString() + elevator.id.toString()"></elevator>
+        <elevator v-for="elevator in elevators" :elevator="elevator" :levelId="levelId" v-bind:key="levelId.toString() + elevator.id.toString()"></elevator>
         <call-elevator-form :levelId="levelId"></call-elevator-form>
     </div>
 </template>

@@ -1,6 +1,6 @@
 
 const config = {
-    numberOfLevels: 15,
-    numberOfElevators: 10,
+    numberOfLevels: 5,
+    numberOfElevators: 5,
 }
 export default config;
