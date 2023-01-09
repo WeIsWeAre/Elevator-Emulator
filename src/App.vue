@@ -3,7 +3,6 @@
 
      <elevator-system></elevator-system>
 
-
   </div>
 </template>
 
@@ -44,6 +43,7 @@
             "id": i + 1,
             "inMotion": false,
             "locationLevel": 1,
+            "state": -1, // -1 on the spot; 1 - UP; 0 - DOWN 
             "color": "#"+((1<<24)*Math.random()|0).toString(16),
           })
         }
@@ -70,6 +70,4 @@
     padding:0;
     color: black;
   }
-
-
 </style>

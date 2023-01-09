@@ -11,9 +11,8 @@ export const store = new Vuex.Store({
     levels: [],
   },
   getters: {
-    getElevatorColorById :(state) => (idLevel,idElevator) => {
-      const tmp = state.elevators.find(elevator => elevator.locationLevel === idLevel && elevator.id === idElevator)
-      return tmp ? tmp.color : "white";
+    getElevatorById :(state) => (idLevel,idElevator) => {
+      return state.elevators.find(elevator => elevator.locationLevel === idLevel && elevator.id === idElevator)
     },
     getLevels(state){
       return state.levels;
@@ -32,18 +31,18 @@ export const store = new Vuex.Store({
     },
     callElevator(state,data) {
       const temp = state.elevators.filter(el => el.inMotion === false).map(el => el.locationLevel);
-      console.log(temp);
       const callLevelId = data.levelID;
       const numberLevelOfNearestElevator = temp.sort((x, y) => Math.abs(callLevelId - x) - Math.abs(callLevelId - y))[0];
-      const changeElevator = state.elevators.find(elevator => elevator.locationLevel == numberLevelOfNearestElevator)
-      if(changeElevator){
-        const transitTime = Math.abs(callLevelId-changeElevator.locationLevel)
-        console.log(transitTime);
-        changeElevator.locationLevel = callLevelId;
-        changeElevator.inMotion = true;
-        setTimeout(() => {      
-          changeElevator.inMotion = false;
-        }, transitTime*1000); 
+      if(callLevelId !== numberLevelOfNearestElevator){
+        const changeElevator = state.elevators.find(elevator => elevator.locationLevel == numberLevelOfNearestElevator)
+        if(changeElevator){
+          changeElevator.transitTime = Math.abs(callLevelId-changeElevator.locationLevel);
+          callLevelId >= changeElevator.locationLevel ? changeElevator.state = 0 : changeElevator.state = 1
+          changeElevator.inMotion = true;
+          setTimeout(() => {      
+            changeElevator.inMotion = false, changeElevator.state = -1, changeElevator.locationLevel = callLevelId;
+          }, changeElevator.transitTime * 1000); 
+        }
       }
     },
     

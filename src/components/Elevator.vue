@@ -1,9 +1,9 @@
 <template>
     <div class="block-elevator mx-2">
-
-        <div v-if="elevator.inMotion === true" v-bind:style="{ backgroundColor: color,borderRadius: '30px' }" class="block-elevator__item"></div>
-        <div v-else v-bind:style="{ backgroundColor: color }" class="block-elevator__item"></div>
-
+        
+    <transition :name="nameTransition">
+        <div v-bind:style="{ backgroundColor: elevator.color }" class="block-elevator__item"></div>
+    </transition>
        
     </div>
 </template>
@@ -11,14 +11,16 @@
 <script>
 export default {
     props: {
-        levelId: Number,
         elevator: Object,
     },
     computed: {
-        color() {
-            return this.$store.getters.getElevatorColorById(this.levelId, this.elevator.id);
+        nameTransition(){
+        
+            if(this.elevator.inMotion === true){return this.elevator.state === 1 ? "elevatorUp" : "elevatorDown";}
+            else{return "";}
         },
     },
+
 }
 </script>
 
@@ -34,13 +36,15 @@ export default {
     height: 99px;
     width: 50px;
     background-color: white;
-    transition-property: background-color;
-    transition-timing-function: linear;
-    transition: 1s;
 }
 
-.elevator-leave{
-    transform: translateY(99px);
+.elevatorUp-leave-to{
+    transition: transform 5s linear;
+    transform: translateyY(-99px);
 }
 
+.elevatorDown-leave-to{  
+    transition: transform 5s linear;
+    transform: translateyY(99px);
+}
 </style>
